@@ -125,7 +125,7 @@ module.exports = function(app) {
         type: 'string',
         title: 'Token expiration time (Exmaples: 60s, 1m, 1h, 1d, 1y)',
         default: '1y'
-      }
+      },
       facebook_app_id: {
         type: 'string',
         title: 'Facebook App ID',
