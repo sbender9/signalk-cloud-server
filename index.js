@@ -98,9 +98,9 @@ module.exports = function(app) {
 
     cloudApp.get("/getToken", function(req, res) {
       var payload = {id: req.user.email};
-      var expiration = configuration.jwtExpiration || '1h'
+      var expiration = options.jwtExpiration || '1d'
       debug('jwt expiration: ' + expiration)
-      var token = jwt.sign(payload, app.config.security.jwtSecretKey, {expiresIn: options.expiration | "1d"} );
+      var token = jwt.sign(payload, app.config.security.jwtSecretKey, {expiresIn: expiration );
 
       res.send(`${req.user.email} your token is ${token}`);
     });
