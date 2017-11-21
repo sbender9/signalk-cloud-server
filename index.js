@@ -2,6 +2,7 @@ const debug = require("debug")("signalk:cloud-server");
 const util = require("util");
 const _ = require('lodash');
 const jwt = require('jsonwebtoken')
+const fs = require('fs')
 
 const express = require('express')
 const passport = require('passport');
@@ -67,7 +68,7 @@ module.exports = function(app) {
       cloudApp.get('/facebook/callback',
                    passport.authenticate('facebook', 
                                          { successRedirect: '/cloud/getToken',
-                                           failureRedirect: '/cloudlogin' }));
+                                           failureRedirect: '/cloud/login' }));
     }
 
     if ( options.google_client_id ) {
@@ -92,7 +93,7 @@ module.exports = function(app) {
       cloudApp.get('/google/callback',
                    passport.authenticate('google', 
                                          { successRedirect: '/cloud/getToken',
-                                           failureRedirect: '/' }));
+                                           failureRedirect: '/cloud/login' }));
     }
       
 
@@ -102,10 +103,13 @@ module.exports = function(app) {
       debug('jwt expiration: ' + expiration)
       var token = jwt.sign(payload, app.config.settings.security.jwtSecretKey, {expiresIn: expiration} );
 
-      res.send(`${req.user.email} your token is ${token}`);
+      res.send(`<br>${req.user.email} your token is<br>${token}`);
     });
-     
 
+    cloudApp.get("/login", function(req, res) {
+      var html = fs.readFileSync(__dirname + '/login.html', {encoding: 'utf8'})
+      res.send(html);
+    });
   };
   
   plugin.stop = function() {
