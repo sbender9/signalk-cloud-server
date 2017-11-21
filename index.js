@@ -100,7 +100,7 @@ module.exports = function(app) {
       var payload = {id: req.user.email};
       var expiration = options.jwtExpiration || '1d'
       debug('jwt expiration: ' + expiration)
-      var token = jwt.sign(payload, app.config.security.jwtSecretKey, {expiresIn: expiration} );
+      var token = jwt.sign(payload, app.config.settings.security.jwtSecretKey, {expiresIn: expiration} );
 
       res.send(`${req.user.email} your token is ${token}`);
     });
