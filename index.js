@@ -2,6 +2,7 @@ const debug = require("debug")("signalk:cloud-server");
 const util = require("util");
 const _ = require('lodash');
 
+const express = require('express')
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
  
@@ -16,6 +17,8 @@ module.exports = function(app) {
     debug("start");
 
     options = theOptions;
+
+    var cloudApp = express();
 
     if ( options.facebook_app_id ) {
       debug("Setting up for facebook...")
@@ -36,13 +39,24 @@ module.exports = function(app) {
         done(null, user);
       }));
 
-      app.get('/cloud/facebook', passport.authenticate('facebook', {scope:"email"}));
-      app.get('/cloud/facebook/callback',
-              passport.authenticate('facebook', 
-                                    { successRedirect: '/cloud/getToken',
-                                      failureRedirect: '/cloudlogin' }));
+      cloudApp.get('/facebook', passport.authenticate('facebook', {scope:"email"}));
+      cloudApp.get('/facebook/callback',
+                   passport.authenticate('facebook', 
+                                         { successRedirect: '/cloud/getToken',
+                                           failureRedirect: '/cloudlogin' }));
     }
-    passport.initialize();
+
+    cloudApp.use(require('cookie-parser')());
+    cloudApp.use(require('body-parser').urlencoded({ extended: true }));
+    cloudApp.use(require('express-session')({
+      secret: 'keyboard cat',
+      resave: true,
+      saveUninitialized: true
+    }));
+    cloudApp.use(passport.initialize());
+    cloudApp.use(passport.session());
+
+    app.use("/cloud", cloudApp)
   };
   
   plugin.stop = function() {

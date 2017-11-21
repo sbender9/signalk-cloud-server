@@ -22,7 +22,11 @@
     "debug": "^2.2.0",
     "lodash": "^4.17.4",
     "passport": "^0.4.0",
-    "passport-facebook": "^2.1.1"
+    "passport-facebook": "^2.1.1",
+    "express": "^4.10.4",
+    "cookie-parser": "^1.4.3",
+    "body-parser": "^1.18.2",
+    "express-session": "^1.15.6"
   },
   "repository": {
     "type": "git",
