@@ -105,6 +105,11 @@ module.exports = function(app) {
       debug('jwt expiration: ' + expiration)
       var token = jwt.sign(payload, app.config.settings.security.jwtSecretKey, {expiresIn: expiration} );
 
+      debug(`${req.user.email}: ${token}`)
+
+
+      
+
       res.send(`<br>${req.user.email} your token is<br><br>${token}`);
     });
 
@@ -113,6 +118,14 @@ module.exports = function(app) {
       res.send(html);
     });
   };
+
+  function addUser(email) {
+    var config = readJson(app, 'sk-simple-token-security-config')
+
+    config.configuration.users.push({"username": email, "type": "readwrite"})
+    
+    saveJson(app, 'sk-simple-token-security-config', config)
+  }
   
   plugin.stop = function() {
     debug("stopping...")
@@ -157,3 +170,28 @@ module.exports = function(app) {
 
   return plugin;
 };
+
+function readJson(app, id) {
+  try
+  {
+    const path = pathForPluginId(app, id)
+    debug("path: " + path)
+    const optionsAsString = fs.readFileSync(path, 'utf8');
+    try {
+      return JSON.parse(optionsAsString)
+    } catch (e) {
+      console.error("Could not parse JSON options:" + optionsAsString);
+      return {}
+    }
+  } catch (e) {
+    debug("Could not find options for plugin " + id + ", returning empty options")
+    debug(e.stack)
+    return {}
+  }
+  return JSON.parse()
+}
+
+function saveJson(app, id, json)
+{
+  fs.writeFile(pathForPluginId(app, id), JSON.stringify(json, null, 2))
+}
