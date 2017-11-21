@@ -19,6 +19,18 @@ module.exports = function(app) {
     options = theOptions;
 
     var cloudApp = express();
+    
+    cloudApp.use(passport.initialize());
+    cloudApp.use(passport.session());
+    app.use("/cloud", cloudApp)
+
+    passport.serializeUser(function(user, done) {
+      done(null, user.email);
+    });
+    
+    passport.deserializeUser(function(id, done) {
+      done(err, { email: id });
+    });
 
     if ( options.facebook_app_id ) {
       debug("Setting up for facebook...")
@@ -48,15 +60,7 @@ module.exports = function(app) {
 
     cloudApp.use(require('cookie-parser')());
     cloudApp.use(require('body-parser').urlencoded({ extended: true }));
-    cloudApp.use(require('express-session')({
-      secret: 'keyboard cat',
-      resave: true,
-      saveUninitialized: true
-    }));
-    cloudApp.use(passport.initialize());
-    cloudApp.use(passport.session());
-
-    app.use("/cloud", cloudApp)
+    cloudApp.use(require('express-session'))
   };
   
   plugin.stop = function() {
