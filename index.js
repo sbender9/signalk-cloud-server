@@ -58,9 +58,18 @@ module.exports = function(app) {
                                            failureRedirect: '/cloudlogin' }));
     }
 
+    cloudApp.get("/getToken", function(req, res) {
+      res.send("Yeah!");
+    });
+                
+
     cloudApp.use(require('cookie-parser')());
     cloudApp.use(require('body-parser').urlencoded({ extended: true }));
-    cloudApp.use(require('express-session'))
+    cloudApp.use(require('express-session')({ 
+      secret: 'cloudsecret',
+      saveUninitialized: true,
+      resave: true
+    }))
   };
   
   plugin.stop = function() {
