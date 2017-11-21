@@ -101,11 +101,11 @@ module.exports = function(app) {
 
     cloudApp.get("/getToken", function(req, res) {
       var payload = {id: req.user.email};
-      var expiration = options.jwtExpiration || '1d'
+      var expiration = options.tokenExpiration || '1y'
       debug('jwt expiration: ' + expiration)
       var token = jwt.sign(payload, app.config.settings.security.jwtSecretKey, {expiresIn: expiration} );
 
-      res.send(`<br>${req.user.email} your token is<br>${token}`);
+      res.send(`<br>${req.user.email} your token is<br><br>${token}`);
     });
 
     cloudApp.get("/login", function(req, res) {
@@ -121,6 +121,11 @@ module.exports = function(app) {
   plugin.schema = {
     type: 'object',
     properties: {
+      tokenExpiration: {
+        type: 'string',
+        title: 'Token expiration time (Exmaples: 60s, 1m, 1h, 1d, 1y)',
+        default: '1y'
+      }
       facebook_app_id: {
         type: 'string',
         title: 'Facebook App ID',
