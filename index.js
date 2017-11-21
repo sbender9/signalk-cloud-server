@@ -1,6 +1,7 @@
 const debug = require("debug")("signalk:cloud-server");
 const util = require("util");
 const _ = require('lodash');
+const jwt = require('jsonwebtoken')
 
 const express = require('express')
 const passport = require('passport');
@@ -96,7 +97,12 @@ module.exports = function(app) {
       
 
     cloudApp.get("/getToken", function(req, res) {
-      res.send("Yeah: " + JSON.stringify(req.user));
+      var payload = {id: req.user.email};
+      var expiration = configuration.jwtExpiration || '1h'
+      debug('jwt expiration: ' + expiration)
+      var token = jwt.sign(payload, app.config.security.jwtSecretKey, {expiresIn: options.expiration | "1d"} );
+
+      res.send(`${req.user.email} your token is ${token}`);
     });
      
 
