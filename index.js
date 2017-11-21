@@ -87,11 +87,11 @@ module.exports = function(app) {
         done(null, user);
       }));
 
-      cloudApp.get('/google', passport.authenticate('google'));
+      cloudApp.get('/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
       cloudApp.get('/google/callback',
                    passport.authenticate('google', 
                                          { successRedirect: '/cloud/getToken',
-                                           failureRedirect: '/cloudlogin' }));
+                                           failureRedirect: '/' }));
     }
       
 
