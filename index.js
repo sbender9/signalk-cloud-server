@@ -35,6 +35,8 @@ module.exports = function(app) {
     cloudApp.use(passport.initialize());
     cloudApp.use(passport.session());
 
+    cloudApp.use('/static', express.static(__dirname + '/static'));
+
     app.use("/cloud", cloudApp)
 
     passport.serializeUser(function(user, done) {

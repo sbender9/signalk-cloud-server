@@ -18,14 +18,6 @@
     <![endif]-->
   </head>
   <body>
-    <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.11&appId=1091047987665240';
-  fjs.parentNode.insertBefore(js, fjs);
-  }(document, 'script', 'facebook-jssdk'));</script>
 
 <div class="container">
   <center>
@@ -34,7 +26,12 @@
 
       <br><br><br><br><br>
 
-      <div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+      <a href="/cloud/facebook">
+        <img src="/cloud/static/facebook.png" alt="Login with Facebook" border="0">
+      </a><br><br>
+      <a href="/cloud/google">
+        <img src="/cloud/static/google.png" alt="Login with Google" border="0">
+      </a>
       </center>
 
       </div>
