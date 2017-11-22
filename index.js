@@ -119,9 +119,6 @@ module.exports = function(app) {
 
   function addUser(email) {
     var config = readJson(app, 'sk-simple-token-security-config')
-
-    debug("config: " + JSON.stringify(config))
-    
     var found = false
     config.configuration.users.forEach(user => {
       if ( user.username == email ) {
@@ -189,7 +186,7 @@ function readJson(app, id) {
   try
   {
     const path = pathForPluginId(app, id)
-    debug("path: " + path)
+    //debug("path: " + path)
     const optionsAsString = fs.readFileSync(path, 'utf8');
     try {
       return JSON.parse(optionsAsString)
