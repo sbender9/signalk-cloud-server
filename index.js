@@ -3,6 +3,7 @@ const util = require("util");
 const _ = require('lodash');
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
+const path = require('path')
 
 const express = require('express')
 const passport = require('passport');
@@ -180,7 +181,7 @@ module.exports = function(app) {
 };
 
 function pathForPluginId(app, id) {
-    var dir = app.config.configPath || app.config.appPath
+  var dir = app.config.configPath || app.config.appPath
   return path.join(dir, "/plugin-config-data", id + '.json')
 }
 
