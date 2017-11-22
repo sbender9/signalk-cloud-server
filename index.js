@@ -171,6 +171,11 @@ module.exports = function(app) {
   return plugin;
 };
 
+function pathForPluginId(app, id) {
+    var dir = app.config.configPath || app.config.appPath
+  return path.join(dir, "/plugin-config-data", id + '.json')
+}
+
 function readJson(app, id) {
   try
   {
