@@ -106,10 +106,7 @@ module.exports = function(app) {
       var token = jwt.sign(payload, app.config.settings.security.jwtSecretKey, {expiresIn: expiration} );
 
       debug(`${req.user.email}: ${token}`)
-
-
-      
-
+      addUser(req.user.email)
       res.send(`<br>${req.user.email} your token is<br><br>${token}`);
     });
 
