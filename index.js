@@ -122,9 +122,18 @@ module.exports = function(app) {
   function addUser(email) {
     var config = readJson(app, 'sk-simple-token-security-config')
 
-    config.configuration.users.push({"username": email, "type": "readwrite"})
-    
-    saveJson(app, 'sk-simple-token-security-config', config)
+    var found = false
+    config.configuration.users.forEach(user => {
+      if ( user.username == email ) {
+        found = true;
+      }
+    });
+
+    if ( found == false ) {
+      config.configuration.users.push({"username": email, "type": "readwrite"})
+      
+      saveJson(app, 'sk-simple-token-security-config', config)
+    }
   }
   
   plugin.stop = function() {
