@@ -104,7 +104,7 @@ module.exports = function(app) {
       var payload = {id: req.user.email};
       var expiration = options.tokenExpiration || '1y'
       debug('jwt expiration: ' + expiration)
-      var token = jwt.sign(payload, app.config.settings.security.jwtSecretKey, {expiresIn: expiration} );
+      var token = jwt.sign(payload, app.securityStrategy.config.secretKey, {expiresIn: expiration} );
 
       debug(`${req.user.email}: ${token}`)
       addUser(req.user.email)
@@ -118,18 +118,18 @@ module.exports = function(app) {
   };
 
   function addUser(email) {
-    var config = readJson(app, 'sk-simple-token-security-config')
+    var config = readJson(app)
     var found = false
-    config.configuration.users.forEach(user => {
+    config.users.forEach(user => {
       if ( user.username == email ) {
         found = true;
       }
     });
 
     if ( found == false ) {
-      config.configuration.users.push({"username": email, "type": "readwrite"})
+      config.users.push({"username": email, "type": "readwrite"})
       
-      saveJson(app, 'sk-simple-token-security-config', config)
+      saveJson(app, config)
     }
   }
   
@@ -177,15 +177,15 @@ module.exports = function(app) {
   return plugin;
 };
 
-function pathForPluginId(app, id) {
+function pathForSecuritySettings(app) {
   var dir = app.config.configPath || app.config.appPath
-  return path.join(dir, "/plugin-config-data", id + '.json')
+  return path.join(dir, 'security.json')
 }
 
-function readJson(app, id) {
+function readJson(app) {
   try
   {
-    const path = pathForPluginId(app, id)
+    const path = pathForSecuritySettings(app)
     //debug("path: " + path)
     const optionsAsString = fs.readFileSync(path, 'utf8');
     try {
@@ -195,14 +195,14 @@ function readJson(app, id) {
       return {}
     }
   } catch (e) {
-    debug("Could not find options for plugin " + id + ", returning empty options")
+    debug("Could not find security settings, returning empty options")
     debug(e.stack)
     return {}
   }
   return JSON.parse()
 }
 
-function saveJson(app, id, json)
+function saveJson(app, json)
 {
-  fs.writeFile(pathForPluginId(app, id), JSON.stringify(json, null, 2))
+  fs.writeFile(pathForSecuritySettings(app), JSON.stringify(json, null, 2))
 }
