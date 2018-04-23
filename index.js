@@ -104,7 +104,7 @@ module.exports = function(app) {
       var payload = {id: req.user.email};
       var expiration = options.tokenExpiration || '1y'
       debug('jwt expiration: ' + expiration)
-      var token = jwt.sign(payload, app.securityStrategy.config.secretKey, {expiresIn: expiration} );
+      var token = jwt.sign(payload, app.securityStrategy.getConfiguration().secretKey, {expiresIn: expiration} );
 
       debug(`${req.user.email}: ${token}`)
       addUser(req.user.email)
